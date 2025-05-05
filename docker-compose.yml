@@ -4,8 +4,29 @@ services:
   wedding_invite:
     build: .
     container_name: wedding_invite
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - .:/app
+    restart: unless-stopped
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: wedding_invite_ngrok
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    command:
+      - http
+      - wedding_invite:8000
+      - --domain=${NGROK_SUBDOMAIN}.ngrok-free.app
+      - --log
+      - stdout
+
+  ngrok_proxy:
+    build: ./ngrok_proxy
+    container_name: wedding_invite_ngrok_proxy
+    ports:
+      - "8080:80"
+    environment:
+      - NGROK_DOMAIN=${NGROK_SUBDOMAIN}.ngrok-free.app
     restart: unless-stopped
