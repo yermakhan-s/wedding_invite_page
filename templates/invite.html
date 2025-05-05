@@ -13,7 +13,7 @@
     }
 
     body {
-      font-family: 'Open Sans', sans-serif;
+      font-family: 'Open Sans', Arial, sans-serif;
       background-color: #fdfcf9;
       color: #000;
       overflow-x: hidden;
@@ -36,6 +36,7 @@
         rgba(255, 255, 255, 0) 88%,
         rgba(255, 255, 255, 0.7) 100%
       );
+      transition: filter 0.3s ease;
     }
 
     #page-content {
@@ -43,7 +44,7 @@
     }
 
     .title-section {
-      background: url('static/img/hero.jpg') no-repeat center center/cover;
+      background: url('/static/img/hero.jpg') no-repeat center center/cover;
       height: 100vh;
       position: relative;
     }
@@ -99,7 +100,7 @@
       left: 50%;
       transform: translateX(-50%);
       color: black;
-      font-family: 'Noto Serif Display', serif;
+      font-family: 'Noto Serif Display', Georgia, serif;
       font-size: 2.6rem;
       text-align: center;
       line-height: 1.3;
@@ -129,7 +130,7 @@
       background-color: rgba(255, 255, 255, 0.7);
       padding: 32px 28px;
       border-radius: 50%;
-      font-family: 'Noto Serif Display', serif;
+      font-family: 'Noto Serif Display', Georgia, serif;
       font-size: 1.5rem;
       width: 320px;
       height: 320px;
@@ -200,7 +201,7 @@
 </head>
 <body id="page-body">
   <button id="play-button" class="play-button" onclick="togglePlay()">▶</button>
-  <audio id="wedding-audio" src="static/music/toi_zhyry.mp3" preload="auto"></audio>
+  <audio id="wedding-audio" src="/static/music/toi_zhyry.mp3" preload="auto"></audio>
 
   <div id="page-content">
     <div class="title-section">
@@ -222,55 +223,38 @@
     </div>
 
     <div class="section">
-      <img src="static/img/baloon.jpg" alt="Balloon" />
+      <img src="/static/img/baloon.jpg" alt="Balloon" />
       <div class="overlay-text">
-        <p>
-          Құрметті ағайын-туыс, бауырлар, құда-жекжат, дос-жаран,
-          әріптестер, көршілер!
-        </p>
+        <p>Құрметті ағайын-туыс, бауырлар, құда-жекжат, дос-жаран, әріптестер, көршілер!</p>
       </div>
     </div>
 
     <div class="section">
-      <img src="static/img/ring_in_case.jpg" alt="Ring in case" />
+      <img src="/static/img/ring_in_case.jpg" alt="Ring in case" />
       <div class="overlay-text">
-        <p>
-          Сіздерді Алдияр мен Айнұрдың үйлену тойына арналған ақ
-          дастарханымыздың қадірлі қонағы болуға шақырамыз!
-        </p>
+        <p>Сіздерді Алдияр мен Айнұрдың үйлену тойына арналған ақ дастарханымыздың қадірлі қонағы болуға шақырамыз!</p>
       </div>
     </div>
 
     <div class="section">
-      <img src="static/img/flowers.jpg" alt="Flowers" />
+      <img src="/static/img/flowers.jpg" alt="Flowers" />
       <div class="overlay-text">
-        <p>
-          Той күні:<br />21 маусым 2025 г.<br />сағат 18:00
-        </p>
+        <p>Той күні:<br />21 маусым 2025 г.<br />сағат 18:00</p>
       </div>
     </div>
 
     <div class="section">
-      <img src="static/img/ring.jpg" alt="Flowers" />
+      <img src="/static/img/ring.jpg" alt="Ring" />
       <div class="overlay-text">
-        <p>
-          Мекен-жайымыз:<br />
-          «Екі жұлдыз» мейрамханасы<br />
-          <a
-            href="https://2gis.kz/taraz/geo/70000001060683268/71.388026,42.921009"
-            target="_blank"
-          >2Gis</a>
-        </p>
+        <p>Мекен-жайымыз:<br />«Екі жұлдыз» мейрамханасы<br />
+        <a href="https://2gis.kz/taraz/geo/70000001060683268/71.388026,42.921009" target="_blank">2Gis</a></p>
       </div>
     </div>
 
     <div class="section">
-      <img src="static/img/baloon.jpg" alt="Flowers" />
+      <img src="/static/img/baloon.jpg" alt="Balloon again" />
       <div class="overlay-text">
-        <p>
-          Той иелері:<br />Ильяс & Салтанат<br />Келіңіздер,
-          қуанышымызға ортақ болыңыздар!
-        </p>
+        <p>Той иелері:<br />Ильяс & Салтанат<br />Келіңіздер, қуанышымызға ортақ болыңыздар!</p>
       </div>
     </div>
   </div>
@@ -278,7 +262,7 @@
   <script>
     const audio = document.getElementById("wedding-audio");
     const button = document.getElementById("play-button");
-    const pageContent = document.getElementById("page-content");
+    const pageBody = document.getElementById("page-body");
 
     let audioContext, analyser, source, dataArray;
 
@@ -298,8 +282,8 @@
       if (!analyser) return;
       analyser.getByteFrequencyData(dataArray);
       const avg = dataArray.reduce((a, b) => a + b) / dataArray.length;
-      const brightness = 1 + avg / 300;
-      pageContent.style.filter = `brightness(${brightness.toFixed(2)})`;
+      const brightness = Math.min(2.2, 1 + avg / 80); // stronger effect
+      pageBody.style.filter = `brightness(${brightness.toFixed(2)})`;
     }
 
     function togglePlay() {
@@ -314,27 +298,21 @@
       } else {
         audio.pause();
         button.textContent = '▶';
-        pageContent.style.filter = "brightness(1)";
+        pageBody.style.filter = "brightness(1)";
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const observer = new IntersectionObserver(
-        (entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        {
-          threshold: 0.4,
-        }
-      );
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
 
-      const targets = document.querySelectorAll('.overlay-text');
-      targets.forEach((target) => observer.observe(target));
+      document.querySelectorAll('.overlay-text').forEach((el) => observer.observe(el));
     });
   </script>
 </body>
